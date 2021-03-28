@@ -1,0 +1,196 @@
+#!/bin/sh
+
+__get_os_name_from_uname_a() {
+    if command -v uname > /dev/null ; then
+        unset V
+        V=$(uname -a | cut -d ' ' -f2)
+        case $V in
+            opensuse*) return 1 ;;
+            *-*) echo "$V" | cut -d- -f1 ;;
+            *)   return 1
+        esac
+    else
+        return 1
+    fi
+}
+
+__get_os_version_from_uname_a() {
+    if command -v uname > /dev/null ; then
+        unset V
+        V=$(uname -a | cut -d ' ' -f2)
+        case $V in
+            opensuse*) return 1 ;;
+            *-*) echo "$V" | cut -d- -f2 ;;
+            *)   return 1
+        esac
+    else
+        return 1
+    fi
+}
+
+# https://www.freedesktop.org/software/systemd/man/os-release.html
+__get_os_name_from_etc_os_release() {
+    if [ -f /etc/os-release ] ; then
+        unset F
+        F=$(mktemp) &&
+        cat /etc/os-release > "$F" &&
+        echo 'echo "$ID"'  >> "$F" &&
+        sh "$F"
+    else
+        return 1
+    fi
+}
+
+__get_os_version_from_etc_os_release() {
+    if [ -f /etc/os-release ] ; then
+        unset F
+        F=$(mktemp) &&
+        cat /etc/os-release > "$F" &&
+        echo 'echo "$VERSION_ID"'  >> "$F" && {
+            unset V
+            V=$(sh "$F")
+            if [ -z "$V" ] ; then
+                echo 'rolling'
+            else
+                echo "$V"
+            fi
+        }
+    else
+        return 1
+    fi
+}
+
+# https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-PDA/LSB-PDA/lsbrelease.html
+__get_os_name_from_lsb_release() {
+    if command -v lsb_release > /dev/null ; then
+        lsb_release --id | cut -f2
+    else
+        return 1
+    fi
+}
+
+__get_os_version_from_lsb_release() {
+    if command -v lsb_release > /dev/null ; then
+        lsb_release --release | cut -f2
+    else
+        return 1
+    fi
+}
+
+__get_os_name_from_getprop() {
+    if command -v getprop > /dev/null && command -v app_process > /dev/null ; then
+        echo 'android'
+    else
+        return 1
+    fi
+}
+
+__get_os_version_from_getprop() {
+    if command -v getprop > /dev/null ; then
+        getprop ro.build.version.release
+    else
+        return 1
+    fi
+}
+
+__get_os_arch_from_getprop() {
+    if command -v getprop > /dev/null ; then
+        getprop ro.product.cpu.abi
+    else
+        return 1
+    fi
+}
+
+__get_os_arch_from_uname() {
+    if command -v uname > /dev/null ; then
+        uname -m 2> /dev/null
+    else
+        return 1
+    fi
+}
+
+__get_os_arch_from_arch() {
+    if command -v arch > /dev/null ; then
+        arch
+    else
+        return 1
+    fi
+}
+
+help() {
+    cat <<'EOF'
+os -h | --help
+os -V | --version
+os type 
+os arch 
+os name 
+os version
+EOF
+}
+
+main() {
+    if [ $# -eq 0 ] ; then
+        printf "os-type : %s\n" "$(main type)"
+        printf "os-name : %s\n" "$(main name)"
+        printf "os-vers : %s\n" "$(main version)"
+        printf "os-arch : %s\n" "$(main arch)"
+    elif [ $# -eq 1 ] ; then
+        case $1 in
+            -h|--help)
+                help
+                ;;
+            -V|--version)
+                MY_VERSION='2021.03.28.23'
+                printf "%s\n" "$MY_VERSION"
+                ;;
+            type)
+                case $(uname | tr A-Z a-z) in
+                    msys*|mingw*|cygwin*)
+                        echo 'windows' ;;
+                    *)  uname | tr A-Z a-z
+                esac
+                ;;
+            arch)
+                __get_os_arch_from_uname ||
+                __get_os_arch_from_arch  ||
+                __get_os_arch_from_getprop
+                ;;
+            name) 
+                case $(uname | tr A-Z a-z) in
+                    freebsd) echo 'FreeBSD' ;;
+                    openbsd) echo 'OpenBSD' ;;
+                    netbsd)  echo 'NetBSD'  ;;
+                    darwin)  sw_vers -productName ;;
+                    linux)
+                        __get_os_name_from_uname_a ||
+                        __get_os_name_from_etc_os_release ||
+                        __get_os_name_from_lsb_release
+                        ;;
+                    msys*|mingw*|cygwin*)
+                        systeminfo | grep 'OS Name:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
+                    *)  uname | tr A-Z a-z
+                esac
+                ;;
+            version)
+                case $(uname | tr A-Z a-z) in
+                    freebsd) freebsd-version ;;
+                    openbsd) uname -r ;;
+                    netbsd)  uname -r ;;
+                    darwin)  sw_vers -productVersion ;;
+                    linux)
+                        __get_os_version_from_uname_a ||
+                        __get_os_version_from_etc_os_release ||
+                        __get_os_version_from_lsb_release
+                        ;;
+                    msys*|mingw*|cygwin*)
+                        systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
+                esac
+                ;;
+            *)  echo "$1: not support item."; exit 1
+        esac
+    else
+        echo "only support one item."; exit 1
+    fi
+}
+
+main $@
