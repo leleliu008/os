@@ -183,7 +183,7 @@ main() {
                         __get_os_version_from_lsb_release
                         ;;
                     msys*|mingw*|cygwin*)
-                        systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
+                        systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' | cut -d ' ' -f1 ;;
                 esac
                 ;;
             *)  echo "$1: not support item."; exit 1
