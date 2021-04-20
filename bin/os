@@ -117,8 +117,16 @@ __get_os_arch_from_arch() {
     fi
 }
 
-help() {
-    cat <<'EOF'
+os() {
+    if [ $# -eq 0 ] ; then
+        printf "current-machine-os-type : %s\n" "$(os type)"
+        printf "current-machine-os-name : %s\n" "$(os name)"
+        printf "current-machine-os-vers : %s\n" "$(os version)"
+        printf "current-machine-os-arch : %s\n" "$(os arch)"
+    elif [ $# -eq 1 ] ; then
+        case $1 in
+            -h|--help)
+                cat <<'EOF'
 os -h | --help
 os -V | --version
 os type 
@@ -126,37 +134,21 @@ os arch
 os name 
 os version
 EOF
-}
-
-main() {
-    if [ $# -eq 0 ] ; then
-        printf "os-type : %s\n" "$(main type)"
-        printf "os-name : %s\n" "$(main name)"
-        printf "os-vers : %s\n" "$(main version)"
-        printf "os-arch : %s\n" "$(main arch)"
-    elif [ $# -eq 1 ] ; then
-        case $1 in
-            -h|--help)
-                help
                 ;;
             -V|--version)
-                MY_VERSION='2021.03.28.23'
-                printf "%s\n" "$MY_VERSION"
+                printf "%s\n" '2021.03.28.23'
                 ;;
             type)
                 case $(uname | tr A-Z a-z) in
-                    msys*|mingw*|cygwin*)
-                        echo 'windows' ;;
+                    msys*)    echo "msys"    ;;
+                    mingw32*) echo "mingw32" ;;
+                    mingw64*) echo "mingw64" ;;
+                    cygwin*)  echo 'cygwin'  ;;
                     *)  uname | tr A-Z a-z
                 esac
                 ;;
-            arch)
-                __get_os_arch_from_uname ||
-                __get_os_arch_from_arch  ||
-                __get_os_arch_from_getprop
-                ;;
             name) 
-                case $(uname | tr A-Z a-z) in
+                case $(os type) in
                     freebsd) echo 'FreeBSD' ;;
                     openbsd) echo 'OpenBSD' ;;
                     netbsd)  echo 'NetBSD'  ;;
@@ -166,10 +158,15 @@ main() {
                         __get_os_name_from_etc_os_release ||
                         __get_os_name_from_lsb_release
                         ;;
-                    msys*|mingw*|cygwin*)
+                    msys|mingw*|cygwin)
                         systeminfo | grep 'OS Name:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
                     *)  uname | tr A-Z a-z
                 esac
+                ;;
+            arch)
+                __get_os_arch_from_uname ||
+                __get_os_arch_from_arch  ||
+                __get_os_arch_from_getprop
                 ;;
             version)
                 case $(uname | tr A-Z a-z) in
@@ -186,11 +183,11 @@ main() {
                         systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' | cut -d ' ' -f1 ;;
                 esac
                 ;;
-            *)  echo "$1: not support item."; exit 1
+            *)  echo "$1: not support item."; return 1
         esac
     else
-        echo "only support one item."; exit 1
+        echo "only support one item."; return 1
     fi
 }
 
-main $@
+os $@
