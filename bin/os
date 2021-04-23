@@ -147,7 +147,7 @@ EOF
                     *)  uname | tr A-Z a-z
                 esac
                 ;;
-            name) 
+            name)
                 case $(os type) in
                     freebsd) echo 'FreeBSD' ;;
                     openbsd) echo 'OpenBSD' ;;
