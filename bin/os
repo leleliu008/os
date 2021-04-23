@@ -131,9 +131,9 @@ os() {
 os -h | --help
 os -V | --version
 os kind
-os type 
-os arch 
-os name 
+os type
+os arch
+os name
 os version
 EOF
                 ;;
