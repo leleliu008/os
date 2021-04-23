@@ -181,7 +181,7 @@ EOF
                 __get_os_arch_from_getprop
                 ;;
             version)
-                case $(os type) in
+                case $(os kind) in
                     freebsd) freebsd-version ;;
                     openbsd) uname -r ;;
                     netbsd)  uname -r ;;
