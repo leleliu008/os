@@ -119,6 +119,7 @@ __get_os_arch_from_arch() {
 
 os() {
     if [ $# -eq 0 ] ; then
+        printf "current-machine-os-kind : %s\n" "$(os kind)"
         printf "current-machine-os-type : %s\n" "$(os type)"
         printf "current-machine-os-name : %s\n" "$(os name)"
         printf "current-machine-os-vers : %s\n" "$(os version)"
@@ -129,6 +130,7 @@ os() {
                 cat <<'EOF'
 os -h | --help
 os -V | --version
+os kind
 os type 
 os arch 
 os name 
@@ -138,17 +140,27 @@ EOF
             -V|--version)
                 printf "%s\n" '2021.03.28.23'
                 ;;
+            kind)
+                case $(uname | tr A-Z a-z) in
+                    msys*)    echo "windows" ;;
+                    mingw32*) echo "windows" ;;
+                    mingw64*) echo "windows" ;;
+                    cygwin*)  echo 'windows' ;;
+                    *)  uname | tr A-Z a-z
+                esac
+                ;;
+
             type)
                 case $(uname | tr A-Z a-z) in
-                    msys*)    echo "windows/msys"    ;;
-                    mingw32*) echo "windows/mingw32" ;;
-                    mingw64*) echo "windows/mingw64" ;;
-                    cygwin*)  echo 'windows/cygwin'  ;;
+                    msys*)    echo "msys"    ;;
+                    mingw32*) echo "mingw32" ;;
+                    mingw64*) echo "mingw64" ;;
+                    cygwin*)  echo 'cygwin'  ;;
                     *)  uname | tr A-Z a-z
                 esac
                 ;;
             name)
-                case $(os type) in
+                case $(os kind) in
                     freebsd) echo 'FreeBSD' ;;
                     openbsd) echo 'OpenBSD' ;;
                     netbsd)  echo 'NetBSD'  ;;
@@ -158,7 +170,7 @@ EOF
                         __get_os_name_from_etc_os_release ||
                         __get_os_name_from_lsb_release
                         ;;
-                    windows/*)
+                    windows)
                         systeminfo | grep 'OS Name:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
                     *)  uname | tr A-Z a-z
                 esac
@@ -179,7 +191,7 @@ EOF
                         __get_os_version_from_etc_os_release ||
                         __get_os_version_from_lsb_release
                         ;;
-                    windows/*)
+                    windows)
                         systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' | cut -d ' ' -f1 ;;
                 esac
                 ;;
