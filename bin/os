@@ -146,7 +146,12 @@ EOF
                     mingw32*) echo "windows" ;;
                     mingw64*) echo "windows" ;;
                     cygwin*)  echo 'windows' ;;
-                    *)  uname | tr A-Z a-z
+                    *)
+                        if [ "$(uname -o)" = 'Android' ] ; then
+                            echo android
+                        else
+                            uname | tr A-Z a-z
+                        fi
                 esac
                 ;;
 
@@ -156,7 +161,12 @@ EOF
                     mingw32*) echo "mingw32" ;;
                     mingw64*) echo "mingw64" ;;
                     cygwin*)  echo 'cygwin'  ;;
-                    *)  uname | tr A-Z a-z
+                    *)
+                        if [ "$(uname -o)" = 'Android' ] ; then
+                            echo android
+                        else
+                            uname | tr A-Z a-z
+                        fi
                 esac
                 ;;
             name)
@@ -170,6 +180,7 @@ EOF
                         __get_os_name_from_etc_os_release ||
                         __get_os_name_from_lsb_release
                         ;;
+                    android) echo android ;;
                     windows)
                         systeminfo | grep 'OS Name:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' ;;
                     *)  uname | tr A-Z a-z
@@ -191,6 +202,7 @@ EOF
                         __get_os_version_from_etc_os_release ||
                         __get_os_version_from_lsb_release
                         ;;
+                    android) __get_os_version_from_getprop ;;
                     windows)
                         systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' | cut -d ' ' -f1 ;;
                 esac
