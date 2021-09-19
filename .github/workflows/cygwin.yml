@@ -28,4 +28,4 @@ jobs:
 
     - uses: actions/checkout@v2
     
-    - run: cd ${{ github.workspace }} && bin/os
+    - run: cd '${{ github.workspace }}' && bin/os

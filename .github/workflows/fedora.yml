@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - run: dnf -y update && dnf -y install git
-      - if: ${{ matrix.tag != 'rawhide' }}
+        if: ${{ matrix.tag != 'rawhide' }}
 
       - uses: actions/checkout@v2
 
