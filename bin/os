@@ -134,7 +134,7 @@ __get_os_name_from_os_type() {
         netbsd)  echo 'NetBSD'  ;;
         darwin)  sw_vers -productName ;;
         linux)
-            if [ "$(uname -o)" = Android ] ; then
+            if [ "$(uname -o 2>/dev/null)" = Android ] ; then
                 echo Android
             else
                 __get_os_name_from_uname_a ||
@@ -174,7 +174,7 @@ __get_os_sub_system() {
         mingw64*) echo "mingw64" ;;
         cygwin*)  echo 'cygwin'  ;;
         *)
-            if [ "$(uname -o)" = 'Android' ] ; then
+            if [ "$(uname -o 2>/dev/null)" = Android ] ; then
                 if [ -n "$TERMUX_VERSION" ] ; then
                     echo termux
                 fi
@@ -190,7 +190,7 @@ __get_os_arch() {
 __get_os_libc_from_os_type() {
     case $1 in
         linux)
-            if [ "$(uname -o)" = Android ] ; then
+            if [ "$(uname -o 2>/dev/null)" = Android ] ; then
                 echo bionic
                 return 0
             fi

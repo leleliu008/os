@@ -18,6 +18,9 @@ jobs:
     container: fedora:${{ matrix.tag }}
 
     steps:
+      - run: dnf -y update && dnf -y install git
+      - if: ${{ matrix.tag != 'rawhide' }}
+
       - uses: actions/checkout@v2
 
       - run: bin/os
