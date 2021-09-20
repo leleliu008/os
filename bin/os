@@ -123,7 +123,7 @@ __get_os_type_from_uname() {
         mingw32*) echo "windows" ;;
         mingw64*) echo "windows" ;;
         cygwin*)  echo 'windows' ;;
-        *)        echo "$1" 
+        *)        echo "$1"
     esac
 }
 
@@ -145,7 +145,7 @@ __get_os_name_from_os_type() {
         windows)
             systeminfo | grep 'OS Name:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//'
             ;;
-        *) echo "$1" 
+        *) echo "$1"
     esac
 }
 
