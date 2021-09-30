@@ -4,7 +4,11 @@ a command-line tool to get os info.
 # os command usage
 |command|values|
 |-|-|
-|`os`     ||
+|`os`     |help of this command|
+|`os -h`  |help of this command|
+|`os --help`||
+|`os -V`  |version of this command|
+|`os --version`|version of this command|
 |`os kind`|`linux` `darwin` `windows` `freebsd` `nstbsd` `openbsd`|
 |`os type`|`android` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
 |`os name`|`Android` `macOS` `FreeBSD` `NetBSD` `OpenBSD` `Debian` `Ubuntu` `CentOS` `Fedora`|
@@ -14,9 +18,9 @@ a command-line tool to get os info.
 |`os subs`|`cygwin` `msys` `mingw32` `mingw64` `termux`|
 
 ## common used os list
-|kind|type|name|libc|spkg|subs|
+|kind|type|name|libc|sys-pkg|subs|sub-sys-pkg|
 |-|-|-|-|-|-|
-|`linux`|`android`|[Andriod](https://www.android.com/)|`bionic`|[pkg](https://wiki.termux.com/wiki/Package_Management)|[termux](https://termux.com/)|
+|`linux`|`android`|[Andriod](https://www.android.com/)|`bionic`||[termux](https://termux.com/)|[pkg](https://wiki.termux.com/wiki/Package_Management)|
 |`linux`|`debian`|[Debian GNU/Linux](https://www.debian.org/releases/)|`glibc`|[apt-get](https://manpages.debian.org/buster/apt/apt-get.8.en.html)||
 |`linux`|`ubuntu`|[Ubuntu](https://releases.ubuntu.com/)|`glibc`|[apt-get](http://manpages.ubuntu.com/manpages/cosmic/man8/apt-get.8.html)||
 |`linux`|`linuxmint`|[LinuxMint](https://linuxmint.com/)|`glibc`|[apt-get](https://community.linuxmint.com/tutorial/view/588)||
@@ -33,5 +37,5 @@ a command-line tool to get os info.
 |`openbsd`|`openbsd`|[OpenBSD](https://www.openbsd.org/)||[pkg_*](https://www.openbsdhandbook.com/package_management/)||
 |`netbsd`|`netbsd`|[NetBSD](https://www.netbsd.org/)||[pkgin](https://pkgin.net/)||
 |`darwin`|`macos`|[macOS](https://www.apple.com/macos)||[HomeBrew](https://brew.sh/)||
-|`windows`|`windows`|[Windows](https://www.microsoft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[cygwin](https://www.cygwin.com/)|
-|`windows`|`windows`|[Windows](https://www.microsoft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[MSYS2](https://www.msys2.org/)|
+|`windows`|`windows`|[Windows](https://www.microsoft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[cygwin](https://www.cygwin.com/)|[Chocolatey](https://chocolatey.org/)|
+|`windows`|`windows`|[Windows](https://www.microsoft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[MSYS2](https://www.msys2.org/)|[pacman](https://www.msys2.org/docs/package-management/)|
