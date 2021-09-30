@@ -1,9 +1,19 @@
 #!/bin/sh
 
-__get_os_id_from_uname_a() {
+__get_os_kind_from_uname() {
+    case $1 in
+        msys*)    printf '%s\n' 'windows' ;;
+        mingw32*) printf '%s\n' 'windows' ;;
+        mingw64*) printf '%s\n' 'windows' ;;
+        cygwin*)  printf '%s\n' 'windows' ;;
+        *)        printf '%s\n' "$1"
+    esac
+}
+
+__get_os_type_from_uname_a() {
     if [ $# -eq 0 ] ; then
         if command -v uname > /dev/null ; then
-            __get_os_id_from_uname_a "$(uname -a | cut -d ' ' -f2)"
+            __get_os_type_from_uname_a "$(uname -a | cut -d ' ' -f2)"
         else
             return 1
         fi
@@ -33,7 +43,7 @@ __get_os_version_from_uname_a() {
 }
 
 # https://www.freedesktop.org/software/systemd/man/os-release.html
-__get_os_id_from_etc_os_release() {
+__get_os_type_from_etc_os_release() {
     if [ -e /etc/os-release ] ; then
         (
             . /etc/os-release || return 1
@@ -64,7 +74,7 @@ __get_os_version_from_etc_os_release() {
 }
 
 # https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-PDA/LSB-PDA/lsbrelease.html
-__get_os_id_from_lsb_release() {
+__get_os_type_from_lsb_release() {
     if command -v lsb_release > /dev/null ; then
         lsb_release --id | cut -f2 | tr A-Z a-z
     else
@@ -80,10 +90,10 @@ __get_os_version_from_lsb_release() {
     fi
 }
 
-__get_os_id_from_etc_redhat_release() {
+__get_os_type_from_etc_redhat_release() {
     if [ $# -eq 0 ] ; then
         if [ -e /etc/redhat-release ] ; then
-            __get_os_id_from_etc_redhat_release "$(cat /etc/redhat-release)"
+            __get_os_type_from_etc_redhat_release "$(cat /etc/redhat-release)"
         else
             return 1
         fi
@@ -149,34 +159,24 @@ __get_os_arch_from_arch() {
     fi
 }
 
-__get_os_type_from_uname() {
-    case $1 in
-        msys*)    printf '%s\n' "windows" ;;
-        mingw32*) printf '%s\n' "windows" ;;
-        mingw64*) printf '%s\n' "windows" ;;
-        cygwin*)  printf '%s\n' 'windows' ;;
-        *)        printf '%s\n' "$1"
-    esac
-}
-
-__get_os_id_from_os_type() {
+__get_os_type_from_os_kind() {
     case $1 in
         darwin)  printf '%s\n' macos ;;
         linux)
             if [ "$(uname -o 2>/dev/null)" = Android ] ; then
                 printf '%s\n' android
             else
-                __get_os_id_from_etc_redhat_release ||
-                __get_os_id_from_etc_os_release ||
-                __get_os_id_from_lsb_release ||
-                __get_os_id_from_uname_a
+                __get_os_type_from_etc_redhat_release ||
+                __get_os_type_from_etc_os_release ||
+                __get_os_type_from_lsb_release ||
+                __get_os_type_from_uname_a
             fi
             ;;
         *) printf '%s\n' "$1"
     esac
 }
 
-__get_os_name_from_os_id() {
+__get_os_name_from_os_type() {
     case $1 in
         debian)  printf '%s\n' 'Debian' ;;
         ubuntu)  printf '%s\n' 'Ubuntu' ;;
@@ -203,7 +203,7 @@ __get_os_name_from_os_id() {
     esac
 }
 
-__get_os_version_from_os_type() {
+__get_os_version_from_os_kind() {
     case $1 in
         freebsd) freebsd-version ;;
         openbsd) uname -r ;;
@@ -242,7 +242,7 @@ __get_os_arch() {
     __get_os_arch_from_arch
 }
 
-__get_os_libc_from_os_type() {
+__get_os_libc_from_os_kind() {
     case $1 in
         linux)
             if [ "$(uname -o 2>/dev/null)" = Android ] ; then
@@ -272,10 +272,10 @@ __get_os_libc_from_os_type() {
 
 os() {
     if [ $# -eq 0 ] ; then
-        printf "current-machine-os-id   : %s\n" "$(os id)"
+        printf "current-machine-os-kind : %s\n" "$(os kind)"
+        printf "current-machine-os-type : %s\n" "$(os type)"
         printf "current-machine-os-name : %s\n" "$(os name)"
         printf "current-machine-os-vers : %s\n" "$(os vers)"
-        printf "current-machine-os-type : %s\n" "$(os type)"
         printf "current-machine-os-arch : %s\n" "$(os arch)"
         printf "current-machine-os-libc : %s\n" "$(os libc)"
         printf "current-machine-os-subs : %s\n" "$(os subs)"
@@ -285,29 +285,29 @@ os() {
                 cat <<'EOF'
 os -h | --help
 os -V | --version
-os id
+os kind
+os type
 os name
 os vers
-os type
 os arch
 os libc
 os subs
 EOF
                 ;;
             -V|--version)
-                printf "%s\n" '2021.09.19.22'
+                printf "%s\n" '2021.10.01.03'
+                ;;
+            kind)
+                __get_os_kind_from_uname $(uname | tr A-Z a-z)
                 ;;
             type)
-                __get_os_type_from_uname $(uname | tr A-Z a-z)
-                ;;
-            id)
-                __get_os_id_from_os_type $(os type)
+                __get_os_type_from_os_kind $(os kind)
                 ;;
             name)
-                __get_os_name_from_os_id $(os id)
+                __get_os_name_from_os_type $(os type)
                 ;;
             vers)
-                __get_os_version_from_os_type $(os type)
+                __get_os_version_from_os_kind $(os kind)
                 ;;
             subs)
                 __get_os_sub_system
@@ -316,7 +316,7 @@ EOF
                 __get_os_arch
                 ;;
             libc)
-                __get_os_libc_from_os_type $(os type)
+                __get_os_libc_from_os_kind $(os kind)
                 ;;
             *)  printf '%s\n' "unrecognized argument: $1" >&2; return 1
         esac
