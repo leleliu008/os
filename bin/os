@@ -77,10 +77,47 @@ __get_os_version_from_lsb_release() {
     fi
 }
 
-__get_os_name_from_getprop() {
-    if command -v getprop > /dev/null && command -v app_process > /dev/null ; then
-        echo 'android'
+__get_os_name_from_etc_redhat_release() {
+    if [ $# -eq 0 ] ; then
+        if [ -e /etc/redhat-release ] ; then
+            __get_os_name_from_etc_redhat_release sentry $(cat /etc/redhat-release)
+        else
+            return 1
+        fi
     else
+        shift
+        case $1 in
+            'Red Hat Enterprise Linux release'*)
+                echo RHEL
+                ;;
+            'Fedora release'*)
+                echo CentOS
+                ;;
+            'CentOS release'*)
+                echo CentOS
+                ;;
+            'CentOS Linux release'*)
+                echo CentOS
+                ;;
+            *)  echo "$1" | cut -f ' ' -f1
+        esac
+    fi
+}
+
+__get_os_version_from_etc_redhat_release() {
+    if [ $# -eq 0 ] ; then
+        if [ -e /etc/redhat-release ] ; then
+            __get_os_version_from_etc_redhat_release sentry $(cat /etc/redhat-release)
+        else
+            return 1
+        fi
+    else
+        while [ -n "$1" ]
+        do
+            case $1 in
+                [1-9]*) echo "$1"; return 0
+            esac
+        done
         return 1
     fi
 }
@@ -88,14 +125,6 @@ __get_os_name_from_getprop() {
 __get_os_version_from_getprop() {
     if command -v getprop > /dev/null ; then
         getprop ro.build.version.release
-    else
-        return 1
-    fi
-}
-
-__get_os_arch_from_getprop() {
-    if command -v getprop > /dev/null ; then
-        getprop ro.product.cpu.abi
     else
         return 1
     fi
@@ -139,7 +168,8 @@ __get_os_name_from_os_type() {
             else
                 __get_os_name_from_uname_a ||
                 __get_os_name_from_etc_os_release ||
-                __get_os_name_from_lsb_release
+                __get_os_name_from_lsb_release ||
+                __get_os_name_from_etc_redhat_release
             fi
             ;;
         windows)
@@ -159,6 +189,7 @@ __get_os_version_from_os_type() {
             __get_os_version_from_uname_a ||
             __get_os_version_from_etc_os_release ||
             __get_os_version_from_lsb_release ||
+            __get_os_version_from_etc_redhat_release ||
             __get_os_version_from_getprop
             ;;
         windows)
