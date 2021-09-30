@@ -88,18 +88,18 @@ __get_os_name_from_etc_redhat_release() {
         shift
         case $1 in
             'Red Hat Enterprise Linux release'*)
-                echo RHEL
+                echo rhel
                 ;;
             'Fedora release'*)
-                echo CentOS
+                echo fedora
                 ;;
             'CentOS release'*)
-                echo CentOS
+                echo centos
                 ;;
             'CentOS Linux release'*)
-                echo CentOS
+                echo centos
                 ;;
-            *)  echo "$1" | cut -f ' ' -f1
+            *)  echo "$1" | cut -d ' ' -f1
         esac
     fi
 }
@@ -167,10 +167,10 @@ __get_os_name_from_os_type() {
             if [ "$(uname -o 2>/dev/null)" = Android ] ; then
                 echo Android
             else
-                __get_os_name_from_uname_a ||
+                __get_os_name_from_etc_redhat_release ||
                 __get_os_name_from_etc_os_release ||
                 __get_os_name_from_lsb_release ||
-                __get_os_name_from_etc_redhat_release
+                __get_os_name_from_uname_a
             fi
             ;;
         windows)
@@ -187,11 +187,11 @@ __get_os_version_from_os_type() {
         netbsd)  uname -r ;;
         darwin)  sw_vers -productVersion ;;
         linux)
-            __get_os_version_from_uname_a ||
+            __get_os_version_from_etc_redhat_release ||
             __get_os_version_from_etc_os_release ||
             __get_os_version_from_lsb_release ||
-            __get_os_version_from_etc_redhat_release ||
-            __get_os_version_from_getprop
+            __get_os_version_from_getprop ||
+            __get_os_version_from_uname_a
             ;;
         windows)
             systeminfo | grep 'OS Version:' | cut -d: -f2 | head -n 1 | sed 's/^[[:space:]]*//' | cut -d ' ' -f1
