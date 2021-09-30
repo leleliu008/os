@@ -172,8 +172,6 @@ __get_os_id_from_os_type() {
                 __get_os_id_from_uname_a
             fi
             ;;
-        windows)
-            ;;
         *) printf '%s\n' "$1"
     esac
 }
