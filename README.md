@@ -3,6 +3,7 @@ a command-line tool to get os info.
 
 # os command usage
 |command|values|
+|-|-|
 |`os`     ||
 |`os kind`|`linux` `darwin` `windows` `freebsd` `nstbsd` `openbsd`|
 |`os type`|`android` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
@@ -12,9 +13,10 @@ a command-line tool to get os info.
 |`os libc`|`glibc` `musl` `bionic`|
 |`os subs`|`cygwin` `msys` `mingw32` `mingw64` `termux`|
 
-## support list
+## common used os list
 |kind|type|name|libc|spkg|subs|
 |-|-|-|-|-|-|
+|`linux`|`android`|[Andriod](https://www.android.com/)|`bionic`|[pkg](https://wiki.termux.com/wiki/Package_Management)|[termux](https://termux.com/)|
 |`linux`|`debian`|[Debian GNU/Linux](https://www.debian.org/releases/)|`glibc`|[apt-get](https://manpages.debian.org/buster/apt/apt-get.8.en.html)||
 |`linux`|`ubuntu`|[Ubuntu](https://releases.ubuntu.com/)|`glibc`|[apt-get](http://manpages.ubuntu.com/manpages/cosmic/man8/apt-get.8.html)||
 |`linux`|`linuxmint`|[LinuxMint](https://linuxmint.com/)|`glibc`|[apt-get](https://community.linuxmint.com/tutorial/view/588)||
