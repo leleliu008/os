@@ -17,7 +17,7 @@ a command-line tool to get os info.
 
 ## common used os list
 |kind|type|name|libc|sys-pkg|subs|sub-sys-pkg|
-|-|-|-|-|-|-|
+|-|-|-|-|-|-|-|
 |`linux`|`android`|[Andriod](https://www.android.com/)|`bionic`||[termux](https://termux.com/)|[pkg](https://wiki.termux.com/wiki/Package_Management)|
 |`linux`|`debian`|[Debian GNU/Linux](https://www.debian.org/releases/)|`glibc`|[apt-get](https://manpages.debian.org/buster/apt/apt-get.8.en.html)|||
 |`linux`|`ubuntu`|[Ubuntu](https://releases.ubuntu.com/)|`glibc`|[apt-get](http://manpages.ubuntu.com/manpages/cosmic/man8/apt-get.8.html)|||
