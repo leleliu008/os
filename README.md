@@ -4,14 +4,16 @@ a command-line tool to get os info.
 ## os command usage
 |command|values|
 |-|-|
-|`os -h`  |help of this command|
-|`os -V`  |version of this command|
-|`os`     |all info|
+|`os -h`  |show help of this command|
+|`os -V`  |show version of this command|
+|`os`     |show all info|
 |`os kind`|`linux` `darwin` `windows` `freebsd` `nstbsd` `openbsd`|
 |`os type`|`android` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
 |`os name`|`Android` `macOS` `FreeBSD` `NetBSD` `OpenBSD` `Debian` `Ubuntu` `CentOS` `Fedora`|
-|`os vers`||
+|`os vers`|show version of current os|
 |`os arch`|`x86_64` `amd64` `aarch64`|
+|`os ncpu`|show the number of cpu of current os|
+|`os euid`|show current effective user ID|
 |`os libc`|`glibc` `musl` `bionic`|
 |`os subs`|`cygwin` `msys` `mingw32` `mingw64` `termux`|
 
