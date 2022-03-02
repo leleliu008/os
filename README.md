@@ -25,7 +25,7 @@ a command-line tool to get os info.
 |`linux`|`linuxmint`|[LinuxMint](https://linuxmint.com/)|`glibc`|[apt-get](https://community.linuxmint.com/tutorial/view/588)|||
 |`linux`|`fedora`|[Fedora](https://getfedora.org/)|`glibc`|[yum](http://yum.baseurl.org/) [dnf](https://github.com/rpm-software-management/dnf)|||
 |`linux`|`centos`|[CentOS](https://www.centos.org/centos-linux/)|`glibc`|[yum](http://yum.baseurl.org/) [dnf](https://github.com/rpm-software-management/dnf)|||
-|`linux`|`rocky`|[Rocky](https://rockylinux.org/)|`glibc`|[yum](http://yum.baseurl.org/) [dnf](https://github.com/rpm-software-management/dnf)|||
+|`linux`|`rocky`|[RockyLinux](https://rockylinux.org/)|`glibc`|[yum](http://yum.baseurl.org/) [dnf](https://github.com/rpm-software-management/dnf)|||
 |`linux`|`opensuse-leap`|[openSUSE Leap](https://get.opensuse.org/leap)|`glibc`|[zypper](https://en.opensuse.org/Portal:Zypper)|||
 |`linux`|`alpine`|[AlpineLinux](https://alpinelinux.org/)|`musl`|[apk](https://docs.alpinelinux.org/user-handbook/0.1a/Working/apk.html)|||
 |`linux`|`void`|[VoidLinux](https://voidlinux.org/)|`glibc`|[xbps](https://github.com/void-linux/xbps/)|||
