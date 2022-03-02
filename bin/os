@@ -183,6 +183,7 @@ __get_os_name_from_os_type() {
         linuxmint) printf '%s\n' 'LinuxMint' ;;
         centos)  printf '%s\n' 'CentOS' ;;
         fedora)  printf '%s\n' 'Fedora' ;;
+        rocky)   printf '%s\n' 'RockyLinux' ;;
         rhel)    printf '%s\n' 'RHEL' ;;
         opensuse-leap)
                  printf '%s\n' 'openSUSE-Leap' ;;
