@@ -10,22 +10,11 @@ jobs:
   test:
     runs-on: windows-latest
 
-    defaults:
-      run:
-        shell: cygwin {0}
-
     steps:
-    - run: choco install -y cygwin
-      shell: pwsh
+      - run: choco install -y cygwin
 
-    - run: C:\tools\cygwin\bin\bash.exe --login -i -c "sed -i 's/--login -i/--login -i %1/' /cygdrive/c/tools/cygwin/Cygwin.bat"
-      shell: pwsh
-   
-    - run: choco install -y --source cygwin git
-    
-    - run: git config --global core.autocrlf input
-      shell: bash
+      - run: git config --global core.autocrlf input
 
-    - uses: actions/checkout@v2
-    
-    - run: cd '${{ github.workspace }}' && bin/os
+      - uses: actions/checkout@v3
+      
+      - run: C:\tools\cygwin\bin\bash.exe --login -i -c "cd '${{ github.workspace }}' && bin/os"

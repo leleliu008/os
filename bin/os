@@ -18,6 +18,8 @@
 
 # dependent commands: uname tr cut cat sed grep
 
+set -e
+
 __get_os_kind() {
     if [ $# -eq 0 ] ; then
         __get_os_kind "$(uname | tr A-Z a-z)"
