@@ -7,10 +7,10 @@ a command-line tool to get os info.
 |`os --help`     |show help of this command|
 |`os --version`  |show version of this command|
 |`os`     |show all info|
-|`os kind`|`linux` `android` `darwin` `windows` `freebsd` `nstbsd` `openbsd`|
-|`os type`|`linux` `android` `macos` `ios` `tvos` `watchos` `windows` `freebsd` `netbsd` `openbsd`|
-|`os uuid`|`linux` `android` `macos` `ios` `tvos` `watchos` `windows` `freebsd` `netbsd` `openbsd` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
-|`os name`|`Android` `macOS` `iOS` `tvOS` `watchOS` `FreeBSD` `NetBSD` `OpenBSD` `Debian` `Ubuntu` `CentOS` `Fedora`|
+|`os kind`|`windows` `darwin` `freebsd` `netbsd` `openbsd` `linux` `android`|
+|`os type`|`windows` `macos` `ios` `tvos` `watchos` `freebsd` `netbsd` `openbsd` `linux` `android`|
+|`os uuid`|`windows` `macos` `ios` `tvos` `watchos` `freebsd` `netbsd` `openbsd` `android` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
+|`os name`|`Windows` `macOS` `iOS` `tvOS` `watchOS` `FreeBSD` `NetBSD` `OpenBSD` `Android` `Debian GNU/Linux` `Ubuntu` `CentOS` `Fedora`|
 |`os vers`|show version of current os|
 |`os arch`|`x86_64` `amd64` `aarch64`|
 |`os ncpu`|show the number of cpu of current os|

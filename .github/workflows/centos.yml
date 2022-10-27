@@ -21,7 +21,12 @@ jobs:
       - run: yum -y update && yum -y install git
         if:  ${{ matrix.tag == '7.5.1804' }}
 
-      - run: dnf -y update && dnf -y install git
+      - run: |
+          sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+          sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+
+          dnf -y update
+          dnf -y install git
         if:  ${{ matrix.tag == '8.3.2011' }}
 
       - uses: actions/checkout@v2
@@ -41,12 +46,13 @@ jobs:
           sed -i 's|http:|https:|g'             /etc/yum.repos.d/CentOS-Base.repo
 
       - run: yum -y update
-      - run: yum -y install patch file curl xz
+      - run: yum -y install patch file curl xz git
 
-      - run: |
-          curl -LO https://github.com/leleliu008/git-prebuild/releases/download/2.30.2/git-2.30.2-x86_64-linux-glibc.tar.xz
-          tar xf git-2.30.2-x86_64-linux-glibc.tar.xz -C /opt
-          ln -sf /opt/git-2.30.2-x86_64-linux-glibc/bin/git /usr/bin/git
+        #- run: |
+        #  curl -LO https://github.com/leleliu008/uppm-package-repository-linux-x86_64/releases/download/2022.10.23/git-2.37.3-linux-x86_64.tar.xz
+        #  install -d /opt/ppkg/installed/git
+        #  tar xf git-2.37.3-linux-x86_64.tar.xz -C /opt/ppkg/installed/git --strip-components=1
+        #  ln -sf /opt/ppkg/installed/git/bin/git /usr/bin/git
 
       - run: git --version
 
