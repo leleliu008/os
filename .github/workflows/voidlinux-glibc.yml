@@ -17,6 +17,6 @@ jobs:
       - run: xbps-install -S
       - run: xbps-install -Syu git
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - run: bin/os

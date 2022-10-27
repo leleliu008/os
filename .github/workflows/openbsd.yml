@@ -8,14 +8,19 @@ on:
 
 jobs:
   test:
-    runs-on: macos-10.15
+    runs-on: macos-12
     
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - uses: leleliu008/github-actions-vagrant@v1
-      with:
-        mem: 2048
-        box: generic/openbsd6
-        run: |
-          run bin/os
+      - uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: vagrant-generic-openbsd-6
+          restore-keys: vagrant-generic-openbsd-6
+
+      - uses: leleliu008/github-actions-vagrant@v1
+        with:
+          mem: 2048
+          box: generic/openbsd6
+          run: run bin/os

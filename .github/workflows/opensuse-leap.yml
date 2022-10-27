@@ -21,6 +21,6 @@ jobs:
       - run: zypper update -y
       - run: zypper install -y git
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - run: bin/os

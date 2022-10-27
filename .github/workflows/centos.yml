@@ -29,7 +29,7 @@ jobs:
           dnf -y install git
         if:  ${{ matrix.tag == '8.3.2011' }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - run: bin/os
 
@@ -39,20 +39,29 @@ jobs:
     container: centos:6.10
 
     steps:
-      - run: |
+      - uses: actions/cache@v2
+        with:
+          path: /opt/ppkg/installed/git
+          id:   restore-cache
+          key: test_6_10-git
+          restore-keys: test_6_10-git
+
+      - if: ${{ steps.restore-cache.outputs.cache-hit != 'true' }}
+        run: |
           sed -i 's|#baseurl=|baseurl=|g'       /etc/yum.repos.d/CentOS-Base.repo
           sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo
           sed -i 's|mirror|vault|g'             /etc/yum.repos.d/CentOS-Base.repo
           sed -i 's|http:|https:|g'             /etc/yum.repos.d/CentOS-Base.repo
 
-      - run: yum -y update
-      - run: yum -y install patch file curl xz git
+          yum -y update
+          yum -y install curl xz
 
-        #- run: |
-        #  curl -LO https://github.com/leleliu008/uppm-package-repository-linux-x86_64/releases/download/2022.10.23/git-2.37.3-linux-x86_64.tar.xz
-        #  install -d /opt/ppkg/installed/git
-        #  tar xf git-2.37.3-linux-x86_64.tar.xz -C /opt/ppkg/installed/git --strip-components=1
-        #  ln -sf /opt/ppkg/installed/git/bin/git /usr/bin/git
+      - if: ${{ steps.restore-cache.outputs.cache-hit != 'true' }}
+        run: |
+          curl -LO https://github.com/leleliu008/uppm-package-repository-linux-x86_64/releases/download/2022.10.23/git-2.37.3-linux-x86_64.tar.xz
+          install -d /opt/ppkg/installed/git
+          tar xf git-2.37.3-linux-x86_64.tar.xz -C /opt/ppkg/installed/git --strip-components=1
+          printf '%s\n' /opt/ppkg/installed/git/bin/git >> "$GITHUB_PATH"
 
       - run: git --version
 
