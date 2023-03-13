@@ -308,7 +308,11 @@ __get_os_libc() {
                     fi
                 fi
 
-                if [ -e "/lib/ld-musl-$(uname -m).so.1" ] ; then
+                ARCH="$(uname -m)"
+
+                [ "$ARCH" = 'ppc64le' ] && ARCH='powerpc64le'
+
+                if [ -e "/lib/ld-musl-$ARCH.so.1" ] ; then
                     printf '%s\n' musl
                     return 0
                 fi
